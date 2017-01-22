@@ -1,0 +1,3 @@
+key: {{image}}
+load: {{load-factor}}
+base64: {{{base64}}}

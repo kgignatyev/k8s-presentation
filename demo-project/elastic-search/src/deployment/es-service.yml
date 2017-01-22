@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: archimedes-es
+  labels:
+    name: archimedes-es
+spec:
+  type: NodePort
+  selector:
+    name: es-rc-pod
+  ports:
+    - port: 9200
+      name: "svc-port"
+      targetPort: 9200
+      nodePort: 31920
+    - port: 9300
+      name: "status-port"
+      targetPort: 9300
+      nodePort: 31930
