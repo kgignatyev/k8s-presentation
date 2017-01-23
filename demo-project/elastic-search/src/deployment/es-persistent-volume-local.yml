@@ -10,4 +10,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-     path: '/var/data/elastic'
+     path: '/var/data/travel-elastic'

@@ -45,7 +45,7 @@ public class BuildUtils {
         FileUtils.copyFile( new File(src),target);
     }
 
-    public static Map readProperties(String baseName, String env ) throws IOException {
+    public static Properties readProperties(String baseName, String env ) throws IOException {
         Properties res = new Properties();
         File f = new File( baseName + ".properties");
         if( f.exists()){
