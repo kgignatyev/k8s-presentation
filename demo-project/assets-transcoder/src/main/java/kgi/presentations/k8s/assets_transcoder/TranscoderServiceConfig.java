@@ -5,6 +5,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.sqs.AmazonSQSClient;
 import kgi.presentations.k8s.common.TravelConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,5 +34,13 @@ public class TranscoderServiceConfig {
         AmazonS3Client s3Client = new AmazonS3Client(awsCredentials());
         s3Client.setRegion(RegionUtils.getRegion(appProperties().region));
         return s3Client;
+    }
+
+
+    @Bean
+    public AmazonSQSClient sqsServiceClient() {
+        AmazonSQSClient sqsClient = new AmazonSQSClient(awsCredentials());
+        sqsClient.setRegion(RegionUtils.getRegion(appProperties().region));
+        return sqsClient;
     }
 }

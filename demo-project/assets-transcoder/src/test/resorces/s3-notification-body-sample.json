@@ -1,0 +1,38 @@
+ {
+    "Records": [
+      {
+        "eventVersion": "2.0",
+        "eventSource": "aws:s3",
+        "awsRegion": "us-west-2",
+        "eventTime": "2017-01-23T06:05:36.287Z",
+        "eventName": "ObjectCreated:Put",
+        "userIdentity": {
+          "principalId": "A2DN8QC4SQRO05"
+        },
+        "requestParameters": {
+          "sourceIPAddress": "73.140.14.186"
+        },
+        "responseElements": {
+          "x-amz-request-id": "E3F50E2A0F635EA9",
+          "x-amz-id-2": "HtJvNYP3OLRTkvQnEhqGTqvhiTc0+l/nMGNdPIzHq1aDt8CGyed/dTs9j/yXAuHS"
+        },
+        "s3": {
+          "s3SchemaVersion": "1.0",
+          "configurationId": "334f9043-331d-463c-9624-b0366909ed29",
+          "bucket": {
+            "name": "k8s-presentation-in",
+            "ownerIdentity": {
+              "principalId": "A2DN8QC4SQRO05"
+            },
+            "arn": "arn:aws:s3:::k8s-presentation-in"
+          },
+          "object": {
+            "key": "kgi.png",
+            "size": 200945,
+            "eTag": "82494f5192b2916a570cae9f02e8382b",
+            "sequencer": "0058859D30299444ED"
+          }
+        }
+      }
+    ]
+  }
