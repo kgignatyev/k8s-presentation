@@ -1,0 +1,19 @@
+server:
+  port: 9100
+
+logging:
+        level:
+           root: "INFO"
+
+project:
+  base-dir: "file://${maven.multiModuleProjectDirectory}"
+
+
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: "${project.base-dir}/src/main/resources/templates/"
+  resources:
+    static-locations: "${project.base-dir}/src/main/resources/static/"
+    cache-period: 0
