@@ -4,6 +4,8 @@ server:
 logging:
         level:
            root: "INFO"
+           org:
+            thymeleaf: "DEBUG"
 
 project:
   base-dir: "file://${maven.multiModuleProjectDirectory}"
