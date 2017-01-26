@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: travelog-ws-service
+spec:
+  selector:
+    app: travelog-ws-pod
+
+  ports:
+    - port: 9100
+      targetPort: 9100

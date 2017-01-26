@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: travelog-ws-rc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: travelog-ws-pod
+      labels:
+        app: travelog-ws-pod
+    spec:
+      containers:
+      - name: travelog-ws-container
+        image:  "{{image}}"
+        ports:
+        - containerPort: 9100
+        volumeMounts:
+          - name: travel-properties
+            mountPath: "/etc/travelog"
+            readOnly: true
+      volumes:
+        - name: travel-properties
+          secret:
+            secretName: "travel-properties"

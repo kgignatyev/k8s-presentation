@@ -7,7 +7,7 @@
         <version>1.4.2.RELEASE</version>
     </parent>
     <groupId>kgi.presentations.k8s</groupId>
-    <artifactId>travelog-webapp</artifactId>
+    <artifactId>travelog-ws</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 

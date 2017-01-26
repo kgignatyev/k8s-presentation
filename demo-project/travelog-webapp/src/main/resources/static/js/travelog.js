@@ -113,8 +113,8 @@
                         element: element[0],
 
                         request: {
-                            endpoint: 'https://s3.amazonaws.com/mcy-travel-dev',
-                            accessKey: 'AKIAIKPG36QE724PUOIQ'
+                            endpoint: 'https://'+travelog.in_bucket+'.s3.amazonaws.com',
+                            accessKey: travelog.access_key_id
                         },
                         signature: {
                             endpoint: '/api/assets/s3-sign-request',
@@ -124,7 +124,7 @@
                             endpoint: '/api/assets/s3-upload-success'
                         },
                         objectProperties:{
-                            bucket:'mcy-travel-dev',
+                            bucket: travelog.in_bucket,
                             key:function (id) {
                                 return '1test1/'+ uploader.getName( id);
                             }

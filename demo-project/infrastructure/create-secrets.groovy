@@ -18,7 +18,7 @@ context.store(sw,"Generated for env:"+ env)
 
 String confFileContent64 = Base64.getEncoder().encodeToString(sw.toString().getBytes(Charset.forName("UTF8")))
 
-def out = "target/k8s/secret." + env + ".yml"
+def out = "target/k8s/travel-secret." + env + ".yml"
 processTemplate("src/secret.tmpl.yml",
         [secretName:'travel-properties',
          secretKey:'travel.properties',
