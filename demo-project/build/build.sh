@@ -4,7 +4,7 @@ kubectl create -f ../infrastructure/monitoring/heapster-rc.yml
 kubectl create -f ../infrastructure/monitoring/heapster-service.yml
 
 cd ../elastic-search
-./build.groovy
+./build.sh
 cd -
 
 

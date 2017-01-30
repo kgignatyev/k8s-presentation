@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd-agent
+  labels:
+    tier: logging
+    app: fluentd-agent
+    version: v1
+spec:
+  template:
+    metadata:
+      labels:
+        name: fluentd
+    spec:
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      containers:
+        - resources:
+            requests:
+              cpu: 0.15
+          securityContext:
+            privileged: true
+          image: {{{image}}}
+          name: fluentd
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/containers/
+              readOnly: true
+            - name: mnt
+              mountPath: /mnt/
+            - name: config
+              mountPath: /fluentd/etc/
+      volumes:
+        - name: config
+          secret:
+              secretName: "fluentd-conf"
+        - name: logs
+          hostPath:
+              path: /var/log/containers/
+        - name: mnt
+          hostPath:
+              path: /mnt/

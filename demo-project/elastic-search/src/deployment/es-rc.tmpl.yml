@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: es-rc-pod
-        image: elasticsearch:2.4
+        image: {{{image}}}
         volumeMounts:
         - mountPath: "/usr/share/elasticsearch/data"
           name: elastic-search-data
