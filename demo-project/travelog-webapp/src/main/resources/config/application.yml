@@ -8,4 +8,4 @@ logging:
 spring:
   thymeleaf:
     cache: true
-    mode: "LEGACYHTML5"
+#    mode: "LEGACYHTML5"
