@@ -20,6 +20,6 @@ spec:
         - containerPort: 9200
         - containerPort: 9300
       volumes:
-      - name: elastic-data
+      - name: elastic-search-data
         persistentVolumeClaim:
-          claimName: pvelastic.claim
+          claimName: "pvelastic.claim"

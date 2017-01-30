@@ -1,9 +1,9 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: archimedes-es
+  name: travelog-es
   labels:
-    name: archimedes-es
+    name: travelog-es
 spec:
   type: NodePort
   selector:

@@ -1,0 +1,10 @@
+.idea/*
+*.iws
+*.iml
+secrets/*
+/out/
+
+node_modules/
+
+target/
+

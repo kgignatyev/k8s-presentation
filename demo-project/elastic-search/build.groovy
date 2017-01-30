@@ -15,7 +15,7 @@ def context = readProperties( '../secrets/travel',env)
 processTemplate("src/deployment/es-persistent-volume-aws.tmpl.yml",
         context, "target/k8s/es-persistent-volume-aws."+env+".yml")
 
-copy( "src/deployment/es-local-rc.yml", "target/k8s/es-local-rc.yml")
+copy( "src/deployment/es-rc.yml", "target/k8s/es-rc.yml")
 copy( "src/deployment/es-persistent-volume-local.yml", "target/k8s/es-persistent-volume-local.yml")
 copy( "src/deployment/es-pv-claim.yml", "target/k8s/es-pv-claim.yml")
 copy( "src/deployment/es-service.yml", "target/k8s/es-service.yml")

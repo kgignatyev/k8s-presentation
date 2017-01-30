@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-import org.apache.commons.io.FileUtils
 
 @Grab(group = 'kgi.presentations.k8s', module =  'build-utils', version = '1.0-SNAPSHOT', changing=true)
 
