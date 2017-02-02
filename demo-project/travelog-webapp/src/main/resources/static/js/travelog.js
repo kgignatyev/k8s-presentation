@@ -49,9 +49,34 @@
         modal.close();
     }
 
-    var m = angular.module('travelog', []);
+    var m = angular.module('travelog', ['ngRoute']);
 
-    m.controller('UploadCtrl', function ($scope, $http) {
+    m.config( function ($routeProvider) {
+        $routeProvider
+            .when('/travelogs-list', {
+                templateUrl: '/components/travelogs-list.html',
+                controller: 'TravelogsListCtrl'
+            })
+            .when('/travelog-view/:id', {
+                templateUrl: '/components/travelog-view.html',
+                controller: 'TravelogViewCtrl'
+            })
+            .when('/travelog-edit/:id', {
+                templateUrl: '/components/travelog-editor.html',
+                controller: 'TravelogEditorCtrl'
+            })
+            .otherwise({redirectTo: '/travelogs-list'});
+    });
+
+    m.controller('TravelogViewCtrl',function ($scope, $http) {
+
+    });
+
+    m.controller('TravelogsListCtrl',function ($scope, $http) {
+
+    });
+
+    m.controller('TravelogEditorCtrl', function ($scope, $http) {
         $scope.presignUrl = function(){
             $http.post("/api/assets/presign-upload/1test1/some.jpg").then(function (response) {
                 $scope.presignedURL = response.data.url;

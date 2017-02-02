@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "dialog-polyfill":"0.4.5",
-    "fine-uploader":"5.12.0",
-    "mustache":"2.3.0"
+    "fine-uploader":"5.13.0"
   }
 }

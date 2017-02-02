@@ -97,7 +97,7 @@
         </div>
     </script>
 </head>
-<body ng-app="travelog" ng-controller="UploadCtrl">
+<body ng-app="travelog" >
 
 <div class="container">
     <nav class="navbar navbar-default">
@@ -109,22 +109,8 @@
             </div>
         </div>
     </nav>
-    <div>
-        <p>Content goes here...</p>
-        <div fine-uploader
 
-             not-available-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/not_available-generic.png"
-             waiting-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/waiting-generic.png"
-             max-file-size="10000000"
-             large-preview-size="500"
-             allowed-mimes="image/jpeg, image/png, image/gif, image/tiff, image/bmp"
-             allowed-extensions='{{["jpeg", "jpg", "png", "gif", "tiff", "tif", "bmp"]}}'></div>
 
-    </div>
-    <dialog class="large-preview">
-        <button title="close" ng-click="closePreview()">X</button>
-        <image ng-src="{{largePreviewUri}}" />
-    </dialog>
     </div>
     <footer>
         <div> &copy; Konstantin Ignatyev - 2017</div>
