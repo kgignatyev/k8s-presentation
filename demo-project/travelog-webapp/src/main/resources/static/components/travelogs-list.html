@@ -1,7 +1,14 @@
+
 <div>
     <button class="btn btn-link" ng-click="createTravelog()">
         <i class="fa fa-plus"></i> New Travelog
     </button>
 
-    <li>...</li>
+    {{travelogs}}
+
+    <li ng-repeat="tl in travelogs">
+        <b><a ng-href="#!/travelog-view/{{tl.id}}">  {{tl.title}}</a></b>
+        <a ng href="#!/travelog-edit/{{tl.id}}"> <i class="fa fa-edit"></i> </a>
+    </li>
+
 </div>

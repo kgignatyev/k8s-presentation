@@ -1,4 +1,4 @@
-(function() {
+(function () {
     //TEST
 
     function isTouchDevice() {
@@ -38,7 +38,7 @@
     }
 
     function openLargerPreview($scope, uploader, modal, size, fileId) {
-        uploader.drawThumbnail(fileId, new Image(), size).then(function(image) {
+        uploader.drawThumbnail(fileId, new Image(), size).then(function (image) {
             $scope.largePreviewUri = image.src;
             $scope.$apply();
             modal.showModal();
@@ -51,8 +51,12 @@
 
     var m = angular.module('travelog', ['ngRoute']);
 
-    m.config( function ($routeProvider) {
+    m.config(function ($routeProvider) {
         $routeProvider
+            .when('/intro', {
+                templateUrl: '/components/intro.html',
+                controller: 'IntroCtrl'
+            })
             .when('/travelogs-list', {
                 templateUrl: '/components/travelogs-list.html',
                 controller: 'TravelogsListCtrl'
@@ -65,32 +69,45 @@
                 templateUrl: '/components/travelog-editor.html',
                 controller: 'TravelogEditorCtrl'
             })
-            .otherwise({redirectTo: '/travelogs-list'});
+            .otherwise({redirectTo: '/intro'});
     });
 
-    m.controller('TravelogViewCtrl',function ($scope, $http) {
+    m.controller('IntroCtrl', function ($scope, $http) {
 
     });
 
-    m.controller('TravelogsListCtrl',function ($scope, $http) {
+    m.controller('TravelogViewCtrl', function ($scope, $http,$routeParams) {
+
+
+        $http.get("/api/travelog/"+$routeParams.id).then(function (r) {
+            $scope.tl = r.data._source;
+        })
+
+    });
+
+    m.controller('TravelogsListCtrl', function ($scope, $http) {
+
+        $http.post("/api/travelog/search",{}).then(function (r) {
+            $scope.travelogs = r.data;
+        })
 
     });
 
     m.controller('TravelogEditorCtrl', function ($scope, $http) {
-        $scope.presignUrl = function(){
+        $scope.presignUrl = function () {
             $http.post("/api/assets/presign-upload/1test1/some.jpg").then(function (response) {
                 $scope.presignedURL = response.data.url;
             })
         };
 
-        $scope.uploadFile = function(){
+        $scope.uploadFile = function () {
 
-            $http.post("/api/assets/presign-upload/1test1/"+$scope.file.name,{"content-type": $scope.file.type}).then(function (response) {
+            $http.post("/api/assets/presign-upload/1test1/" + $scope.file.name, {"content-type": $scope.file.type}).then(function (response) {
                 $scope.presignedURL = response.data.url;
 
-                $http.put($scope.presignedURL, $scope.file,{headers: {'Content-Type': 'image/jpeg'}}).then(function (r) {
-                    console.log( JSON.stringify( r));
-                }).catch(function(resp) {
+                $http.put($scope.presignedURL, $scope.file, {headers: {'Content-Type': 'image/jpeg'}}).then(function (r) {
+                    console.log(JSON.stringify(r));
+                }).catch(function (resp) {
                     console.error("An Error Occurred Attaching Your File");
                 });
             })
@@ -99,14 +116,14 @@
         }
     });
 
-    m.directive('s3file', function() {
+    m.directive('s3file', function () {
         return {
             restrict: 'AE',
             scope: {
                 file: '@'
             },
-            link: function(scope, el, attrs){
-                el.bind('change', function(event){
+            link: function (scope, el, attrs) {
+                el.bind('change', function (event) {
                     var files = event.target.files;
                     var file = files[0];
                     scope.file = file;
@@ -118,12 +135,12 @@
     });
 
 
-    m.directive("fineUploader", function($compile, $interpolate) {
+    m.directive("fineUploader", function ($compile, $interpolate) {
         return {
             restrict: "A",
             replace: true,
 
-            link: function($scope, element, attrs) {
+            link: function ($scope, element, attrs) {
                 var endpoint = attrs.uploadServer,
                     notAvailablePlaceholderPath = attrs.notAvailablePlaceholder,
                     waitingPlaceholderPath = attrs.waitingPlaceholder,
@@ -138,20 +155,20 @@
                         element: element[0],
 
                         request: {
-                            endpoint: 'https://'+travelog.in_bucket+'.s3.amazonaws.com',
+                            endpoint: 'https://' + travelog.in_bucket + '.s3.amazonaws.com',
                             accessKey: travelog.access_key_id
                         },
                         signature: {
                             endpoint: '/api/assets/s3-sign-request',
-                            customHeaders: {'Access-Control-Allow-Origin':'*'}
+                            customHeaders: {'Access-Control-Allow-Origin': '*'}
                         },
                         uploadSuccess: {
                             endpoint: '/api/assets/s3-upload-success'
                         },
-                        objectProperties:{
+                        objectProperties: {
                             bucket: travelog.in_bucket,
-                            key:function (id) {
-                                return '1test1/'+ uploader.getName( id);
+                            key: function (id) {
+                                return '1test1/' + uploader.getName(id);
                             }
                         },
 
@@ -184,11 +201,11 @@
                         },
 
                         callbacks: {
-                            onSubmitted: function(id, name) {
+                            onSubmitted: function (id, name) {
                                 var fileEl = this.getItemByFileId(id),
                                     thumbnailEl = fileEl.querySelector('.thumbnail-button');
 
-                                thumbnailEl.addEventListener('click', function() {
+                                thumbnailEl.addEventListener('click', function () {
                                     openLargerPreview($scope, uploader, previewDialog, largePreviewSize, id);
                                 });
                             }

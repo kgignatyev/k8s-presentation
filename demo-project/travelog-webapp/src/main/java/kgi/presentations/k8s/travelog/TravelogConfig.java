@@ -3,6 +3,7 @@ package kgi.presentations.k8s.travelog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kgi.presentations.k8s.common.TravelConfigProperties;
 import kgi.presentations.k8s.travelog.svc.S3UploadsSignatureHandler;
+import kgi.presentations.k8s.travelog.svc.TravelogService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -21,6 +22,11 @@ public class TravelogConfig {
         return new TravelConfigProperties();
     }
 
+
+    @Bean
+    TravelogService travelogService(){
+        return new TravelogService();
+    }
 
     @Bean
     S3UploadsSignatureHandler s3UploadsSignatureHandler(){
