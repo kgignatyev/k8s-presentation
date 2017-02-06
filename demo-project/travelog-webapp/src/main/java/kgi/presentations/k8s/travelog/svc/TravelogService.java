@@ -1,7 +1,6 @@
 package kgi.presentations.k8s.travelog.svc;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,10 +16,6 @@ import java.util.List;
 
 public class TravelogService {
 
-    @Resource
-    ObjectMapper om;
-
-
     public String esBase() {
         String hostFromEnv = System.getenv("TRAVELOG_ES_SERVICE_HOST");
         String res = "http://travelog-es:9200";
@@ -29,6 +24,9 @@ public class TravelogService {
         }
         return res;
     }
+
+    @Resource
+    ObjectMapper om;
 
 
     public List<JsonNode> find(TravelogSearchCriteria c) throws IOException {

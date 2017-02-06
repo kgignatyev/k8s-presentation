@@ -21,13 +21,14 @@ import javax.annotation.Resource;
 @PropertySource("file:/etc/travelog/travel.properties")
 public class TravelogConfig {
 
-    @Resource
-    ObjectMapper om;
-
     @Bean
     TravelConfigProperties configProperties(){
         return new TravelConfigProperties();
     }
+
+
+    @Resource
+    ObjectMapper om;
 
 
     @Bean

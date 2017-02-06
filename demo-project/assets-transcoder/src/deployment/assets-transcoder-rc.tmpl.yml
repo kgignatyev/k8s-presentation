@@ -14,7 +14,7 @@ spec:
       - name: assets-transcoder-container
         image:  "{{image}}"
         ports:
-        - containerPort: 9010
+        - containerPort: 7200
         volumeMounts:
           - name: travel-properties
             mountPath: "/etc/travel"

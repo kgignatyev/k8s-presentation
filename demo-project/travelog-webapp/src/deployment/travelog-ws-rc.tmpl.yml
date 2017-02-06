@@ -14,7 +14,7 @@ spec:
       - name: travelog-ws-container
         image:  "{{image}}"
         ports:
-        - containerPort: 9100
+        - containerPort: 7100
         volumeMounts:
           - name: travel-properties
             mountPath: "/etc/travelog"

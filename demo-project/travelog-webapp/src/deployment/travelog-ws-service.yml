@@ -7,5 +7,5 @@ spec:
     app: travelog-ws-pod
 
   ports:
-    - port: 9100
-      targetPort: 9100
+    - port: 7100
+      targetPort: 7100
