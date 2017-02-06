@@ -7,8 +7,8 @@
     {{travelogs}}
 
     <li ng-repeat="tl in travelogs">
-        <b><a ng-href="#!/travelog-view/{{tl.id}}">  {{tl.title}}</a></b>
-        <a ng href="#!/travelog-edit/{{tl.id}}"> <i class="fa fa-edit"></i> </a>
+        <b><a ng-href="#!/travelog-view/{{tl._id}}">  {{tl._source.title}}</a></b>
+        <a ng href="#!/travelog-edit/{{tl._id}}"> <i class="fa fa-edit"></i> </a>
     </li>
 
 </div>

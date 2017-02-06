@@ -182,6 +182,8 @@ public class S3UploadsSignatureHandler {
         }
     }
 
+
+
     // Called by the main POST request handler if Fine Uploader has indicated that the file has been
     // successfully sent to S3.  You have the opportunity here to examine the file in S3 and "fail" the upload
     // if something in not correct.

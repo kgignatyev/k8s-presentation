@@ -1,6 +1,7 @@
 package kgi.presentations.k8s.travelog.svc;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -37,7 +38,7 @@ public class TravelogService {
         ArrayNode an = (ArrayNode) n.get("hits").get("hits");
         ArrayList<JsonNode> res = new ArrayList();
         for (JsonNode node : an) {
-            res.add(node.get("_source"));
+            res.add(node);
         }
         return res;
     }
@@ -46,7 +47,10 @@ public class TravelogService {
         return om.readTree( Request.Get(esBase()+"/travelog/posts/" +id).execute().returnContent().asStream());
     }
 
-    public JsonNode postTravelog(String id, JsonNode travelog) throws IOException {
+
+
+    public JsonNode createOrUpdateTravelog(String id, JsonNode travelog) throws IOException {
+        ((ObjectNode)travelog).put("id",id);
         return om.readTree( Request.Put(esBase()+"/travelog/posts/" +id).bodyByteArray(om.writeValueAsBytes(travelog)).execute().returnContent().asStream());
     }
 }

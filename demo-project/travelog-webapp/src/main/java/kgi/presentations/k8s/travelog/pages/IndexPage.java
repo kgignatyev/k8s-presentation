@@ -24,8 +24,10 @@ public class IndexPage {
     @GetMapping(path = {"/"})
     String index(Model model) {
         model.addAttribute("initScript", " travelog ={}; " +
-                "travelog.in_bucket = '" + configProperties.input_bucket + "';" +
-                "travelog.access_key_id = '" + configProperties.access_key_id + "';");
+                "travelog.in_bucket = '" + configProperties.input_bucket + "';\n" +
+                "travelog.output_bucket = '" + configProperties.output_bucket + "';\n" +
+                "travelog.region = '" + configProperties.region + "';\n" +
+                "travelog.access_key_id = '" + configProperties.access_key_id + "';\n");
         return "index";
     }
 }

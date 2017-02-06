@@ -1,18 +1,56 @@
 <div>
     <a href="#!/travelogs-list"> list </a>
-    <div>
-        <div fine-uploader
 
-             not-available-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/not_available-generic.png"
-             waiting-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/waiting-generic.png"
-             max-file-size="10000000"
-             large-preview-size="500"
-             allowed-mimes="image/jpeg, image/png, image/gif, image/tiff, image/bmp"
-             allowed-extensions='{{["jpeg", "jpg", "png", "gif", "tiff", "tif", "bmp"]}}'></div>
 
+{{tl}}
+
+    <div class="row" id="ctrl">
+            <div class="col-md-12">
+
+                <button class="btn btn-info" ng-click="saveTravelog()"> Save </button>
+            </div>
     </div>
-    <dialog class="large-preview">
-        <button title="close" ng-click="closePreview()">X</button>
-        <image ng-src="{{largePreviewUri}}" />
-    </dialog>
+    <div class="row">
+            <div class="col-md-12">
+                <h1>Title: <input type="text" ng-model="tl.title" /></h1>
+            </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button ngf-select="uploadFiles($files, $invalidFiles)" multiple
+                    accept="image/*" ngf-max-height="10000" ngf-max-size="300MB">
+                Select Files
+            </button>
+            <br><br>
+            Files:
+            <ul>
+                <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
+                    <img src="/img/ajax-loader.gif"  width="200px" ng-show="f.inProgress"/>
+                    <span class="progress" ng-show="f.progress >= 0">
+        <div style="width:{{f.progress}}%"
+             ng-bind="f.progress + '%'"></div>
+      </span>
+                </li>
+                <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                </li>
+            </ul>
+            {{errorMsg}}
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+                <li ng-repeat="a in tl.assets">
+                    {{a}}
+                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="sm" />
+                </li>
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-sm" ng-click="refresh()">
+                    refresh
+                </button>
+            </div>
+    </div>
 </div>

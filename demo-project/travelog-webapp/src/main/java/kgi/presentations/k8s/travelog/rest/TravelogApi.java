@@ -3,10 +3,7 @@ package kgi.presentations.k8s.travelog.rest;
 import com.fasterxml.jackson.databind.JsonNode;
 import kgi.presentations.k8s.travelog.svc.TravelogService;
 import kgi.presentations.k8s.travelog.vo.TravelogSearchCriteria;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,4 +30,12 @@ public class TravelogApi {
     public JsonNode getTravelog(@PathVariable String id) throws IOException {
         return travelogService.getTravelog(id);
     }
+
+    @RequestMapping(path = "/{id}",
+            method = RequestMethod.PUT)
+    public JsonNode createOrUpdateTravelog(@RequestBody JsonNode travelog,@PathVariable String id) throws IOException {
+        return travelogService.createOrUpdateTravelog(id, travelog);
+    }
+
+
 }

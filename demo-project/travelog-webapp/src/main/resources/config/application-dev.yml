@@ -1,6 +1,7 @@
 logging:
         level:
            root: "INFO"
+           kgi: "DEBUG"
            org:
             thymeleaf: "DEBUG"
 

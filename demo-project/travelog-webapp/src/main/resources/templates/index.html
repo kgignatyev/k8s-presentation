@@ -14,6 +14,8 @@
     <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.min.js"></script>
+    <script src="/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
+    <script src="/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
     <link href="/node_modules/fine-uploader/fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet">
     <link href="/node_modules/dialog-polyfill/dialog-polyfill.css" rel="stylesheet">
     <link href="/css/core.css" rel="stylesheet">
@@ -37,24 +39,7 @@
 </nav>
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
-    <div>
-        <!--<p>Create your first travelog entry:</p>-->
-        <!--<div fine-uploader-->
-        <!--not-available-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/not_available-generic.png"-->
-        <!--waiting-placeholder="/node_modules/fine-uploader/s3.fine-uploader/placeholders/waiting-generic.png"-->
-        <!--max-file-size="10000000"-->
-        <!--large-preview-size="500"-->
-        <!--allowed-mimes="image/jpeg, image/png, image/gif, image/tiff, image/bmp"-->
-        <!--allowed-extensions="{{['jpeg', 'jpg', 'png', 'gif', 'tiff', 'tif', 'bmp']}}"></div>-->
 
-    </div>
-    <dialog class="large-preview">
-        <button title="close" ng-click="closePreview()">X</button>
-        <image ng-src="{{largePreviewUri}}"/>
-    </dialog>
-
-
-    <script type="text/template" id="qq-template" th:replace="fragments/qq-template :: qq-template"> </script>
 
 
     <div class="container">

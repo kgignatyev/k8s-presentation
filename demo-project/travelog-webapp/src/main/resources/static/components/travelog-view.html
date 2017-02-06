@@ -1,7 +1,9 @@
 <div>
 
     <a href="#!/travelogs-list"> list </a>
-    <h1>{{tl.title}}</h1>
+    <h1>{{tl.title}}
+        <a ng href="#!/travelog-edit/{{tl.id}}"> <i class="fa fa-edit"></i> </a>
+    </h1>
     <div class="row">
       <div class="col-md-6">
 
@@ -9,5 +11,24 @@
       <div class="col-md-6">
 
       </div>
+    </div>
+
+    <div class="row">
+            <div class="col-md-12">
+                <div ng-repeat="a in tl.assets">
+                    {{a}}
+                    <img travelog="tl" travelog-image="a" img-size="sm" />
+                </div>
+
+                <div id="gallery" style="margin:0px auto;display:none;">
+
+
+                    <!--<img   alt=""-->
+                         <!--src="media/thumb-10435411_10201642579784601_2125273491110894222_n.jpg"-->
+                         <!--data-image="media/10435411_10201642579784601_2125273491110894222_n.jpg"-->
+                         <!--data-description=""-->
+                         <!--style="display:none" />-->
+                </div>
+            </div>
     </div>
 </div>

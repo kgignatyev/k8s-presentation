@@ -1,221 +1,187 @@
-(function () {
-    //TEST
+var m = angular.module('travelog', ['ngRoute', "ngFileUpload"]);
 
-    function isTouchDevice() {
-        return "ontouchstart" in window || navigator.msMaxTouchPoints > 0;
+m.uuid = function () {
+    var delim = "-";
+
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
 
-    function initButtonText($scope) {
-        var input = document.createElement("input");
+    return 'i'+(S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
+};
 
-        input.setAttribute("multiple", "true");
 
-        if (input.multiple === true && !qq.android()) {
-            $scope.uploadButtonText = "Select Files";
-        }
-        else {
-            $scope.uploadButtonText = "Select a File";
-        }
-    }
+m.config(function ($routeProvider,$httpProvider) {
 
-    function initDropZoneText($scope, $interpolate) {
-        if (qq.supportedFeatures.folderDrop && !isTouchDevice()) {
-            $scope.dropZoneText = "Drop Files or Folders Here";
-        }
-        else if (qq.supportedFeatures.fileDrop && !isTouchDevice()) {
-            $scope.dropZoneText = "Drop Files Here";
-        }
-        else {
-            $scope.dropZoneText = $scope.$eval($interpolate("Press '{{uploadButtonText}}'"));
-        }
-    }
+    $httpProvider.defaults.useXDomain = true;
+    $routeProvider
+        .when('/intro', {
+            templateUrl: '/components/intro.html',
+            controller: 'IntroCtrl'
+        })
+        .when('/travelogs-list', {
+            templateUrl: '/components/travelogs-list.html',
+            controller: 'TravelogsListCtrl'
+        })
+        .when('/travelog-view/:id', {
+            templateUrl: '/components/travelog-view.html',
+            controller: 'TravelogViewCtrl'
+        })
+        .when('/travelog-edit/:id', {
+            templateUrl: '/components/travelog-editor.html',
+            controller: 'TravelogEditorCtrl'
+        })
+        .otherwise({redirectTo: '/intro'});
+});
 
-    function bindToRenderedTemplate($compile, $scope, $interpolate, element) {
-        $compile(element.contents())($scope);
+m.controller('IntroCtrl', function ($scope, $http) {
 
-        initButtonText($scope);
-        initDropZoneText($scope, $interpolate);
-    }
+});
 
-    function openLargerPreview($scope, uploader, modal, size, fileId) {
-        uploader.drawThumbnail(fileId, new Image(), size).then(function (image) {
-            $scope.largePreviewUri = image.src;
-            $scope.$apply();
-            modal.showModal();
+m.controller('TravelogViewCtrl', function ($scope, $http, $routeParams) {
+
+
+    $http.get("/api/travelog/" + $routeParams.id).then(function (r) {
+        $scope.tl = r.data._source;
+    })
+
+});
+
+m.controller('TravelogsListCtrl', function ($scope, $http, $location) {
+
+    $http.post("/api/travelog/search", {}).then(function (r) {
+        $scope.travelogs = r.data;
+    });
+
+    $scope.createTravelog = function () {
+
+        var id =  m.uuid();
+        $http.put("/api/travelog/" +id,{id:id, title:"New Travelog"}).then(function (r) {
+            $location.path("/api/travelog/" +id)
         });
     }
 
-    function closePreview(modal) {
-        modal.close();
-    }
+});
 
-    var m = angular.module('travelog', ['ngRoute']);
+m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $location,$interval) {
 
-    m.config(function ($routeProvider) {
-        $routeProvider
-            .when('/intro', {
-                templateUrl: '/components/intro.html',
-                controller: 'IntroCtrl'
-            })
-            .when('/travelogs-list', {
-                templateUrl: '/components/travelogs-list.html',
-                controller: 'TravelogsListCtrl'
-            })
-            .when('/travelog-view/:id', {
-                templateUrl: '/components/travelog-view.html',
-                controller: 'TravelogViewCtrl'
-            })
-            .when('/travelog-edit/:id', {
-                templateUrl: '/components/travelog-editor.html',
-                controller: 'TravelogEditorCtrl'
-            })
-            .otherwise({redirectTo: '/intro'});
+    $scope.tl = {};
+
+    $http.get("/api/travelog/" + $routeParams.id).then(function (r) {
+        $scope.tl = r.data._source;
     });
 
-    m.controller('IntroCtrl', function ($scope, $http) {
-
-    });
-
-    m.controller('TravelogViewCtrl', function ($scope, $http,$routeParams) {
 
 
-        $http.get("/api/travelog/"+$routeParams.id).then(function (r) {
-            $scope.tl = r.data._source;
+    $scope.saveTravelog = function () {
+        $http.put('/api/travelog/'+ $scope.tl.id, $scope.tl).then(function (r) {
+            $location.path("/travelog-view/"+$scope.tl.id)
+        }).catch(function (err) {
+            console.error("Cannot save travelog "+ $scope.tl.id);
         })
+    };
 
-    });
+    $scope.refresh = function () {
 
-    m.controller('TravelogsListCtrl', function ($scope, $http) {
+        var images = $(".tl-image");
 
-        $http.post("/api/travelog/search",{}).then(function (r) {
-            $scope.travelogs = r.data;
-        })
+        angular.forEach(images, function (img) {
+            var imgEl = $( img);
+            var src = imgEl.attr('original-src');
+            if(! src ) {
 
-    });
+                $http.post("/api/assets/check-present", {url: src})
+                    .then(function (r) {
+                        console.info(r);
+                        if (!imgEl.attr('loaded')) {
+                            imgEl.attr('src', imgEl.attr('src') + '?t=' + new Date());
+                            imgEl.attr('loaded', 'true');
+                        }
 
-    m.controller('TravelogEditorCtrl', function ($scope, $http) {
-        $scope.presignUrl = function () {
-            $http.post("/api/assets/presign-upload/1test1/some.jpg").then(function (response) {
-                $scope.presignedURL = response.data.url;
-            })
-        };
+                    }).catch(function (data, status, headers, config) {
+                    imgEl.attr('src', '/img/ajax-loader-circle.gif');
+                })
+            }
+        });
 
-        $scope.uploadFile = function () {
 
-            $http.post("/api/assets/presign-upload/1test1/" + $scope.file.name, {"content-type": $scope.file.type}).then(function (response) {
-                $scope.presignedURL = response.data.url;
+    };
 
-                $http.put($scope.presignedURL, $scope.file, {headers: {'Content-Type': 'image/jpeg'}}).then(function (r) {
+
+    $scope.uploadFiles = function (files, errFiles) {
+        if( ! $scope.tl.assets  ){
+            $scope.tl.assets = [];
+        }
+        $scope.files = files;
+        $scope.errFiles = errFiles;
+        angular.forEach(files, function (file) {
+            var contentType = file.type;
+            file.inProgress = true;
+            $http.post('/api/assets/generate-post-url/' + file.name, {"content-type": contentType,"travelogId":$scope.tl.id}).then(function (r) {
+                var postUrl = r.data.url;
+
+                $http.put(postUrl, file, {headers: {'Content-Type': contentType}}).then(function (r) {
                     console.log(JSON.stringify(r));
+                    $scope.tl.assets.push( file.name );
+                    file.inProgress = false;
                 }).catch(function (resp) {
                     console.error("An Error Occurred Attaching Your File");
+                    file.inProgress = false;
                 });
             })
 
+        });
+        $interval($scope.refresh, 5000 );
+    }
+});
 
+m.directive('s3file', function () {
+    return {
+        restrict: 'AE',
+        scope: {
+            file: '@'
+        },
+        link: function (scope, el, attrs) {
+            el.bind('change', function (event) {
+                var files = event.target.files;
+                var file = files[0];
+                scope.file = file;
+                scope.$parent.file = file;
+                scope.$apply();
+            });
         }
-    });
+    };
+});
 
-    m.directive('s3file', function () {
-        return {
-            restrict: 'AE',
-            scope: {
-                file: '@'
-            },
-            link: function (scope, el, attrs) {
-                el.bind('change', function (event) {
-                    var files = event.target.files;
-                    var file = files[0];
-                    scope.file = file;
-                    scope.$parent.file = file;
-                    scope.$apply();
-                });
-            }
-        };
-    });
+// https://s3-us-west-2.amazonaws.com/k8s-presentation-assets/1/thumbnails/DSC_8708-sm.jpg
+m.httpAssetsBase = function(){
+   return "https://s3-" + travelog.region + ".amazonaws.com/" + travelog.output_bucket + "/";
+};
 
+m.directive('travelogImage', function () {
+   return {
+       restrict: 'A',
+       scope: {
+           travelog:"=",
+           travelogImage:"=",
+           imgSize: "@"
+       },
 
-    m.directive("fineUploader", function ($compile, $interpolate) {
-        return {
-            restrict: "A",
-            replace: true,
+       link: function (scope, el, attrs) {
 
-            link: function ($scope, element, attrs) {
-                var endpoint = attrs.uploadServer,
-                    notAvailablePlaceholderPath = attrs.notAvailablePlaceholder,
-                    waitingPlaceholderPath = attrs.waitingPlaceholder,
-                    acceptFiles = attrs.allowedMimes,
-                    sizeLimit = attrs.maxFileSize,
-                    largePreviewSize = parseInt(attrs.largePreviewSize),
-                    allowedExtensions = JSON.parse(attrs.allowedExtensions),
-                    previewDialog = document.querySelector('.large-preview'),
+           var baseLink = scope.travelog.id + "/" + scope.travelogImage;
 
-                    uploader = new qq.s3.FineUploader({
-                        debug: true,
-                        element: element[0],
+           var lnk = m.httpAssetsBase()+ baseLink;
+           if( angular.isDefined(scope.imgSize)){
+                var src = baseLink;
+                var path = src.replace( /\/[^\/]+$/g,'/');
+                var fn = src.replace( /.+\//g,'');
+                var base = fn.replace( /[.].+$/g,'');
+                lnk = m.httpAssetsBase()+ path + "thumbnails/" + base + "-"+ scope.imgSize + ".jpg"
+           }
+           el.attr("src", lnk);
+           el.attr("original-src",lnk)
+       }
 
-                        request: {
-                            endpoint: 'https://' + travelog.in_bucket + '.s3.amazonaws.com',
-                            accessKey: travelog.access_key_id
-                        },
-                        signature: {
-                            endpoint: '/api/assets/s3-sign-request',
-                            customHeaders: {'Access-Control-Allow-Origin': '*'}
-                        },
-                        uploadSuccess: {
-                            endpoint: '/api/assets/s3-upload-success'
-                        },
-                        objectProperties: {
-                            bucket: travelog.in_bucket,
-                            key: function (id) {
-                                return '1test1/' + uploader.getName(id);
-                            }
-                        },
-
-
-                        thumbnails: {
-                            placeholders: {
-                                notAvailablePath: notAvailablePlaceholderPath,
-                                waitingPath: waitingPlaceholderPath
-                            }
-                        },
-
-                        display: {
-                            prependFiles: true
-                        },
-
-                        failedUploadTextDisplay: {
-                            mode: "custom"
-                        },
-
-                        retry: {
-                            enableAuto: true
-                        },
-
-                        chunking: {
-                            enabled: true
-                        },
-
-                        resume: {
-                            enabled: true
-                        },
-
-                        callbacks: {
-                            onSubmitted: function (id, name) {
-                                var fileEl = this.getItemByFileId(id),
-                                    thumbnailEl = fileEl.querySelector('.thumbnail-button');
-
-                                thumbnailEl.addEventListener('click', function () {
-                                    openLargerPreview($scope, uploader, previewDialog, largePreviewSize, id);
-                                });
-                            }
-                        }
-                    });
-
-                dialogPolyfill.registerDialog(previewDialog);
-                $scope.closePreview = closePreview.bind(this, previewDialog);
-                bindToRenderedTemplate($compile, $scope, $interpolate, element);
-            }
-        }
-    });
-})();
+   }
+});

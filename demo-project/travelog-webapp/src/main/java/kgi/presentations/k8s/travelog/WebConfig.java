@@ -1,4 +1,4 @@
-package com.disney.archimedes.service.video;
+package kgi.presentations.k8s.travelog;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

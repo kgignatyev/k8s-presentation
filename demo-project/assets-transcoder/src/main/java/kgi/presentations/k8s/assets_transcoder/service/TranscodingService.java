@@ -3,8 +3,10 @@ package kgi.presentations.k8s.assets_transcoder.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import kgi.presentations.k8s.common.TravelConfigProperties;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,7 +15,7 @@ import java.io.FileOutputStream;
 import java.util.Scanner;
 
 @Service
-public class TranscodingService {
+public class TranscodingService implements InitializingBean{
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -22,6 +24,7 @@ public class TranscodingService {
 
     @Resource
     AmazonS3Client s3Client;
+    private File tempDir;
 
     public void transcode(String srcBucket, String srcKey) throws Exception {
         if (isImage(srcKey)) {
@@ -32,19 +35,29 @@ public class TranscodingService {
     }
 
     void performImageTransformations(String srcBucket, String srcKey) throws Exception {
-        createPresentation("-screen.jpg", 480, srcBucket, srcKey);
-        createPresentation("-th.jpg", 100, srcBucket, srcKey);
+
+        File inFile = File.createTempFile("original", new File( srcKey).getName(), tempDir);
+        FileOutputStream inFileStream = new FileOutputStream(inFile);
+        logger.info("getting source from:{}/{}",srcBucket, srcKey);
+        try {
+            IOUtils.copy(s3Client.getObject(srcBucket, srcKey).getObjectContent(), inFileStream);
+        }catch (Exception e ){
+            logger.error("source does not exists or nor reachable:{}/{}",srcBucket, srcKey);
+            inFileStream.close();
+            return;
+        }
+        inFileStream.close();
+        createPresentation(inFile, 1000, appProperties.output_bucket, makeOutKey(srcKey, null,".jpg"));
+        createPresentation(inFile, 480, appProperties.output_bucket, makeOutKey(srcKey, "thumbnails","-md.jpg"));
+        createPresentation(inFile, 100, appProperties.output_bucket, makeOutKey(srcKey, "thumbnails","-sm.jpg"));
+        inFile.delete();
     }
 
-    void createPresentation(String suffix, int maxWidth, String srcBucket, String srcKey) throws Exception {
+    void createPresentation(File inFile, int maxWidth, String outBucket, String outKey) throws Exception {
 
         String tempFilesPrefix = "transform";
-        File inFile = File.createTempFile(tempFilesPrefix, srcKey);
-        FileOutputStream inFileStream = new FileOutputStream(inFile);
-        IOUtils.copy(s3Client.getObject(srcBucket, srcKey).getObjectContent(), inFileStream);
-        inFileStream.close();
-        String outKey = makeOutKey(srcKey, suffix);
-        File outFile = File.createTempFile(tempFilesPrefix, outKey);
+
+        File outFile = File.createTempFile(tempFilesPrefix, new File(outKey).getName(), tempDir);
 
         String[] cmd = new String[]{ "convert", inFile.getAbsolutePath(), "-resize", ""+ maxWidth + "x10000>", outFile.getAbsolutePath()};
         logger.info( "executing {}", cmd.toString());
@@ -57,18 +70,31 @@ public class TranscodingService {
             }
             throw  new Exception("Could not execute: " + cmd.toString());
         }
-        s3Client.putObject( appProperties.getOutput_bucket(),outKey, outFile);
+        s3Client.putObject( outBucket,outKey, outFile);
+        outFile.delete();
     }
 
-    private String makeOutKey(String srcKey, String suffix) {
+    private String makeOutKey(String srcKey, String subdir, String suffix) {
         int dotIndex = srcKey.lastIndexOf('.');
-        return srcKey.substring(0, dotIndex )+ suffix;
-
+        String k = srcKey.substring(0, dotIndex )+ suffix;
+        if(StringUtils.isNotBlank(subdir)){
+            int lastSlashIndex = k.lastIndexOf('/');
+            k = k.substring(0,lastSlashIndex+1) + subdir + "/" + k.substring(lastSlashIndex+1);
+        }
+        return k;
     }
 
     boolean isImage(String srcKey) {
         String upper = srcKey.toUpperCase();
 
         return upper.endsWith("JPG") || upper.endsWith("PNG") || upper.endsWith("JPEG");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        tempDir = new File("images-temp");
+        if(! tempDir.exists()){
+            tempDir.mkdirs();
+        }
     }
 }
