@@ -21,6 +21,7 @@
         <dbcp2.version>2.1.1</dbcp2.version>
         <ehcache.version>2.9.1</ehcache.version>
         <fluent-hc.version>4.5.2</fluent-hc.version>
+        <google-client.version>v1-rev134-1.22.0</google-client.version>
         <log4j.version>1.2.17</log4j.version>
         <joda-time.version>2.2</joda-time.version>
         <junit.version>4.12</junit.version>
@@ -28,7 +29,7 @@
         <spring-hateoas.version>0.22.0.RELEASE</spring-hateoas.version>
         <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.1.2</thymeleaf-layout-dialect.version>
-
+        <tomcat.version>8.5.11</tomcat.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
@@ -42,21 +43,30 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>com.google.apis</groupId>-->
+            <!--<artifactId>google-api-services-compute</artifactId>-->
+            <!--<version>${google-client.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.google.apis</groupId>-->
+            <!--<artifactId>google-api-services-storage</artifactId>-->
+            <!--<version>v1-rev95-1.22.0</version>-->
+        <!--</dependency>-->
+
+
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <version>${aws-sdk.version}</version>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+            <version>0.8.3-beta</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-sqs</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
