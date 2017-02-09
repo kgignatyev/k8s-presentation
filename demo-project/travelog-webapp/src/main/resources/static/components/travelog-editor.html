@@ -2,13 +2,16 @@
     <a href="#!/travelogs-list"> list </a>
 
 
-{{tl}}
+<!--{{tl}}-->
 
     <div class="row" id="ctrl">
-            <div class="col-md-12">
-
+            <div class="col-md-3">
                 <button class="btn btn-info" ng-click="saveTravelog()"> Save </button>
             </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-danger" ng-click="deleteTravelog()" ng-disabled="busy"> Delete </button>
+        </div>
     </div>
     <div class="row">
             <div class="col-md-12">
@@ -42,7 +45,7 @@
             <div class="col-md-12">
                 <li ng-repeat="a in tl.assets">
                     {{a}}
-                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="sm" />
+                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="sm" pending="yes" />
                 </li>
             </div>
     </div>

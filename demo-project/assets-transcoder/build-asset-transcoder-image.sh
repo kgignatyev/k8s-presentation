@@ -11,3 +11,5 @@ docker tag assets-transcoder:latest $IMAGE
 
 ./generate-k8s-assets.groovy $IMAGE
 
+echo "$IMAGE has been created"
+

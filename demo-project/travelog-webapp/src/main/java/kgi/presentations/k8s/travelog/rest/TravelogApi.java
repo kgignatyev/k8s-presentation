@@ -32,6 +32,12 @@ public class TravelogApi {
     }
 
     @RequestMapping(path = "/{id}",
+            method = RequestMethod.DELETE)
+    public JsonNode deleteTravelog(@PathVariable String id) throws IOException {
+        return travelogService.deleteTravelog(id);
+    }
+
+    @RequestMapping(path = "/{id}",
             method = RequestMethod.PUT)
     public JsonNode createOrUpdateTravelog(@RequestBody JsonNode travelog,@PathVariable String id) throws IOException {
         return travelogService.createOrUpdateTravelog(id, travelog);

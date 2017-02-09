@@ -57,7 +57,7 @@ m.controller('TravelogsListCtrl', function ($scope, $http, $location) {
 
         var id =  m.uuid();
         $http.put("/api/travelog/" +id,{id:id, title:"New Travelog"}).then(function (r) {
-            $location.path("/api/travelog/" +id)
+            $location.path("/travelog-edit/" +id)
         });
     }
 
@@ -66,6 +66,7 @@ m.controller('TravelogsListCtrl', function ($scope, $http, $location) {
 m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $location,$interval) {
 
     $scope.tl = {};
+    $scope.busy = false;
 
     $http.get("/api/travelog/" + $routeParams.id).then(function (r) {
         $scope.tl = r.data._source;
@@ -81,6 +82,18 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
         })
     };
 
+    $scope.deleteTravelog = function () {
+        $scope.busy = true;
+        $http.delete('/api/travelog/'+ $scope.tl.id, $scope.tl).then(function (r) {
+            window.setTimeout(function () {
+               window.location.assign("#!/travelogs-list");
+            },2000);
+
+        }).catch(function (err) {
+            console.error("Cannot delete travelog "+ $scope.tl.id);
+        })
+    };
+
     $scope.refresh = function () {
 
         var images = $(".tl-image");
@@ -88,13 +101,13 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
         angular.forEach(images, function (img) {
             var imgEl = $( img);
             var src = imgEl.attr('original-src');
-            if(! src ) {
+            if( src ) {
 
                 $http.post("/api/assets/check-present", {url: src})
                     .then(function (r) {
-                        console.info(r);
+                        console.info( "got:" + JSON.stringify( r));
                         if (!imgEl.attr('loaded')) {
-                            imgEl.attr('src', imgEl.attr('src') + '?t=' + new Date());
+                            imgEl.attr('src', src);
                             imgEl.attr('loaded', 'true');
                         }
 
@@ -125,7 +138,7 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
                     $scope.tl.assets.push( file.name );
                     file.inProgress = false;
                 }).catch(function (resp) {
-                    console.error("An Error Occurred Attaching Your File");
+                    console.error("An Error Occurred Uploading Your File");
                     file.inProgress = false;
                 });
             })
@@ -179,7 +192,9 @@ m.directive('travelogImage', function () {
                 var base = fn.replace( /[.].+$/g,'');
                 lnk = m.httpAssetsBase()+ path + "thumbnails/" + base + "-"+ scope.imgSize + ".jpg"
            }
+
            el.attr("src", lnk);
+
            el.attr("original-src",lnk)
        }
 

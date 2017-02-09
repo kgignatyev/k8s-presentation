@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 kubectl create -f ../infrastructure/monitoring/heapster-rc.yml
 kubectl create -f ../infrastructure/monitoring/heapster-service.yml
 

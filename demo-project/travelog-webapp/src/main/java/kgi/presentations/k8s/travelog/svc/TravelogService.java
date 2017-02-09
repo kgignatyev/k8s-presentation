@@ -51,4 +51,8 @@ public class TravelogService {
         ((ObjectNode)travelog).put("id",id);
         return om.readTree( Request.Put(esBase()+"/travelog/posts/" +id).bodyByteArray(om.writeValueAsBytes(travelog)).execute().returnContent().asStream());
     }
+
+    public JsonNode deleteTravelog(String id) throws IOException {
+        return om.readTree(Request.Delete(esBase()+"/travelog/posts/" +id).execute().returnContent().asStream());
+    }
 }

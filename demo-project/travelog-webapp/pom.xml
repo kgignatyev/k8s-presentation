@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.4.RELEASE</version>
+        <version>1.5.1.RELEASE</version>
     </parent>
     <groupId>kgi.presentations.k8s</groupId>
     <artifactId>travelog-ws</artifactId>
@@ -14,13 +14,13 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <aws-sdk.version>1.11.86</aws-sdk.version>
+        <aws-sdk.version>1.11.87</aws-sdk.version>
         <aspectj-maven-plugin.version>1.9</aspectj-maven-plugin.version>
         <aspectj-runtime.version>1.8.9</aspectj-runtime.version>
         <commons-io.version>2.5</commons-io.version>
         <dbcp2.version>2.1.1</dbcp2.version>
         <ehcache.version>2.9.1</ehcache.version>
-        <fluent-hc.version>4.5.2</fluent-hc.version>
+        <fluent-hc.version>4.5.3</fluent-hc.version>
         <log4j.version>1.2.17</log4j.version>
         <joda-time.version>2.2</joda-time.version>
         <junit.version>4.12</junit.version>
@@ -105,6 +105,7 @@
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.0.RELEASE</version>
         </dependency>
 
 

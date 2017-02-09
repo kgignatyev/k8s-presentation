@@ -14,46 +14,45 @@
     <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.min.js"></script>
-    <script src="/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
+    <script src="/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+    <!-- for no html5 browsers support -->
     <script src="/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
-    <link href="/node_modules/fine-uploader/fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet">
-    <link href="/node_modules/dialog-polyfill/dialog-polyfill.css" rel="stylesheet">
+
     <link href="/css/core.css" rel="stylesheet">
-    <script src="/node_modules/fine-uploader/s3.fine-uploader/s3.fine-uploader.js"></script>
-    <script src="/node_modules/dialog-polyfill/dialog-polyfill.js"></script>
+
     <script th:utext="${initScript}"></script>
     <script src="/js/travelog.js"></script>
 </head>
 <body ng-app="travelog">
 <!-- Header -->
+<div class="container">
+    <div class="row">
 
-
-<nav class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header" style="height: 120px">
-            <a class="navbar-brand" href="#">
-                <img alt="Brand" src="/img/logo.png" style="height: 100px"/>
-            </a>
+        <div class="col-md-1">
+            <a href="/" > <i class="fa fa-home"></i> </a>
+        </div>
+        <div class="col-md-5">
+            <p><a class="btn btn-default" href="#!/travelogs-list" role="button">Discover exotic places &raquo;</a></p>
+        </div>
+        <div class="col-md-6">
+            <p><a class="btn btn-default" href="#" role="button">Tell Your Travel Tale &raquo;</a></p>
         </div>
     </div>
-</nav>
-<!-- Insert content into the layouts/layout.html -->
-<th:block layout:fragment="content">
+
+    <!-- Insert content into the layouts/layout.html -->
+    <th:block layout:fragment="content">
 
 
-
-    <div class="container">
         <div ng-view></div>
 
+    </th:block>
+    <div class="row">
+            <div class="col-md-12" style="text-align: center">
+                <a href="http://www.kgionline.com">
+                    <div> &copy; Konstantin Ignatyev - 2017</div>
+                </a>
+            </div>
     </div>
-
-    <ul class="social-links">
-        <li>
-            <a href="http://www.kgionline.com">
-                <div> &copy; Konstantin Ignatyev - 2017</div>
-            </a>
-        </li>
-    </ul>
-</th:block>
+</div>
 </body>
 </html>

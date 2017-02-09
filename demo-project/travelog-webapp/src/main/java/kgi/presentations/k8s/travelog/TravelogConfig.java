@@ -40,9 +40,6 @@ public class TravelogConfig {
 
     @Bean
     public AmazonS3 s3ServiceClient() {
-//        AmazonS3Client s3Client = new AmazonS3Client(awsCredentials());
-//        s3Client.setRegion(RegionUtils.getRegion(configProperties().region));
-//        return s3Client;
         return AmazonS3ClientBuilder.standard()
                 .withRegion(configProperties().region)
                 .withCredentials( new AWSStaticCredentialsProvider( awsCredentials() )).build();
