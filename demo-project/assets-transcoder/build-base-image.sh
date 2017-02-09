@@ -6,5 +6,7 @@ IMAGE="kgignatyev/assets-transcoder-base:$TAG"
 
 docker build -t assets-transcoder-base base
 
-docker tag assets-transcoder:latest $IMAGE
+docker tag assets-transcoder-base:latest $IMAGE
+
+echo "Base transcoder image: $IMAGE"
 

@@ -14,7 +14,7 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <aws-sdk.version>1.11.86</aws-sdk.version>
+        <aws-sdk.version>1.11.87</aws-sdk.version>
         <aspectj-maven-plugin.version>1.9</aspectj-maven-plugin.version>
         <aspectj-runtime.version>1.8.9</aspectj-runtime.version>
         <commons-io.version>2.5</commons-io.version>

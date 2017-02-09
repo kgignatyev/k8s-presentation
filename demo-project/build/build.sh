@@ -25,3 +25,14 @@ kubectl create -f ../elastic-search/target/k8s/es-service.yml
 
 kubectl create -f ../infrastructure/logging/target/k8s/fluentd-secret.dev.yml
 kubectl create -f ../infrastructure/logging/target/k8s/fluentd-daemon-set.yml
+
+
+cd  ../common
+mvn install
+cd -
+cd  ../assets-transcoder
+./build.sh
+cd -
+cd ../travelog-webapp
+./build.sh
+cd -

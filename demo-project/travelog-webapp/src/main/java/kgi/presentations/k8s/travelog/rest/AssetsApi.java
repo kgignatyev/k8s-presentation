@@ -3,6 +3,7 @@ package kgi.presentations.k8s.travelog.rest;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.databind.JsonNode;
 import kgi.presentations.k8s.common.TravelConfigProperties;
@@ -68,7 +69,9 @@ public class AssetsApi {
         String key = assetPath.substring(firstSlash+1);
         try {
             S3Object obj = s3.getObject(bucket, key);
-            return ResponseEntity.ok(obj.getObjectMetadata());
+            ObjectMetadata objectMetadata = obj.getObjectMetadata();
+            obj.close();
+            return ResponseEntity.ok(objectMetadata);
         }catch (Exception e){
             logger.error("s3 problems", e);
             return ResponseEntity.notFound().build();
