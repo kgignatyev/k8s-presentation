@@ -7,11 +7,11 @@ m.uuid = function () {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
 
-    return 'i'+(S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
+    return 'i' + (S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
 };
 
 
-m.config(function ($routeProvider,$httpProvider) {
+m.config(function ($routeProvider, $httpProvider) {
 
     $httpProvider.defaults.useXDomain = true;
     $routeProvider
@@ -55,15 +55,15 @@ m.controller('TravelogsListCtrl', function ($scope, $http, $location) {
 
     $scope.createTravelog = function () {
 
-        var id =  m.uuid();
-        $http.put("/api/travelog/" +id,{id:id, title:"New Travelog"}).then(function (r) {
-            $location.path("/travelog-edit/" +id)
+        var id = m.uuid();
+        $http.put("/api/travelog/" + id, {id: id, title: "New Travelog"}).then(function (r) {
+            $location.path("/travelog-edit/" + id)
         });
     }
 
 });
 
-m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $location,$interval) {
+m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $location, $interval) {
 
     $scope.tl = {};
     $scope.busy = false;
@@ -73,24 +73,23 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
     });
 
 
-
     $scope.saveTravelog = function () {
-        $http.put('/api/travelog/'+ $scope.tl.id, $scope.tl).then(function (r) {
-            $location.path("/travelog-view/"+$scope.tl.id)
+        $http.put('/api/travelog/' + $scope.tl.id, $scope.tl).then(function (r) {
+            $location.path("/travelog-view/" + $scope.tl.id)
         }).catch(function (err) {
-            console.error("Cannot save travelog "+ $scope.tl.id);
+            console.error("Cannot save travelog " + $scope.tl.id);
         })
     };
 
     $scope.deleteTravelog = function () {
         $scope.busy = true;
-        $http.delete('/api/travelog/'+ $scope.tl.id, $scope.tl).then(function (r) {
+        $http.delete('/api/travelog/' + $scope.tl.id, $scope.tl).then(function (r) {
             window.setTimeout(function () {
-               window.location.assign("#!/travelogs-list");
-            },2000);
+                window.location.assign("#!/travelogs-list");
+            }, 2000);
 
         }).catch(function (err) {
-            console.error("Cannot delete travelog "+ $scope.tl.id);
+            console.error("Cannot delete travelog " + $scope.tl.id);
         })
     };
 
@@ -99,21 +98,22 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
         var images = $(".tl-image");
 
         angular.forEach(images, function (img) {
-            var imgEl = $( img);
+            var imgEl = $(img);
             var src = imgEl.attr('original-src');
-            if( src ) {
+            if (src) {
+                if (!imgEl.attr('loaded')) {
+                    //todo: replace with head request against desired endpoint
+                    $http.post("/api/assets/check-present", {url: src})
+                        .then(function (r) {
+                            console.info("got:" + JSON.stringify(r));
 
-                $http.post("/api/assets/check-present", {url: src})
-                    .then(function (r) {
-                        console.info( "got:" + JSON.stringify( r));
-                        if (!imgEl.attr('loaded')) {
                             imgEl.attr('src', src);
                             imgEl.attr('loaded', 'true');
-                        }
 
-                    }).catch(function (data, status, headers, config) {
-                    imgEl.attr('src', '/img/ajax-loader-circle.gif');
-                })
+                        }).catch(function (data, status, headers, config) {
+                        imgEl.attr('src', '/img/ajax-loader-circle.gif');
+                    })
+                }
             }
         });
 
@@ -122,7 +122,7 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
 
 
     $scope.uploadFiles = function (files, errFiles) {
-        if( ! $scope.tl.assets  ){
+        if (!$scope.tl.assets) {
             $scope.tl.assets = [];
         }
         $scope.files = files;
@@ -130,12 +130,15 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
         angular.forEach(files, function (file) {
             var contentType = file.type;
             file.inProgress = true;
-            $http.post('/api/assets/generate-post-url/' + file.name, {"content-type": contentType,"travelogId":$scope.tl.id}).then(function (r) {
+            $http.post('/api/assets/generate-post-url/' + file.name, {
+                "content-type": contentType,
+                "travelogId": $scope.tl.id
+            }).then(function (r) {
                 var postUrl = r.data.url;
 
                 $http.put(postUrl, file, {headers: {'Content-Type': contentType}}).then(function (r) {
                     console.log(JSON.stringify(r));
-                    $scope.tl.assets.push( file.name );
+                    $scope.tl.assets.push(file.name);
                     file.inProgress = false;
                 }).catch(function (resp) {
                     console.error("An Error Occurred Uploading Your File");
@@ -144,7 +147,7 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
             })
 
         });
-        $interval($scope.refresh, 5000 );
+        $interval($scope.refresh, 5000);
     }
 });
 
@@ -167,36 +170,36 @@ m.directive('s3file', function () {
 });
 
 // https://s3-us-west-2.amazonaws.com/k8s-presentation-assets/1/thumbnails/DSC_8708-sm.jpg
-m.httpAssetsBase = function(){
-   return "https://s3-" + travelog.region + ".amazonaws.com/" + travelog.output_bucket + "/";
+m.httpAssetsBase = function () {
+    return "https://s3-" + travelog.region + ".amazonaws.com/" + travelog.output_bucket + "/";
 };
 
 m.directive('travelogImage', function () {
-   return {
-       restrict: 'A',
-       scope: {
-           travelog:"=",
-           travelogImage:"=",
-           imgSize: "@"
-       },
+    return {
+        restrict: 'A',
+        scope: {
+            travelog: "=",
+            travelogImage: "=",
+            imgSize: "@"
+        },
 
-       link: function (scope, el, attrs) {
+        link: function (scope, el, attrs) {
 
-           var baseLink = scope.travelog.id + "/" + scope.travelogImage;
+            var baseLink = scope.travelog.id + "/" + scope.travelogImage;
 
-           var lnk = m.httpAssetsBase()+ baseLink;
-           if( angular.isDefined(scope.imgSize)){
+            var lnk = m.httpAssetsBase() + baseLink;
+            if (angular.isDefined(scope.imgSize)) {
                 var src = baseLink;
-                var path = src.replace( /\/[^\/]+$/g,'/');
-                var fn = src.replace( /.+\//g,'');
-                var base = fn.replace( /[.].+$/g,'');
-                lnk = m.httpAssetsBase()+ path + "thumbnails/" + base + "-"+ scope.imgSize + ".jpg"
-           }
+                var path = src.replace(/\/[^\/]+$/g, '/');
+                var fn = src.replace(/.+\//g, '');
+                var base = fn.replace(/[.].+$/g, '');
+                lnk = m.httpAssetsBase() + path + "thumbnails/" + base + "-" + scope.imgSize + ".jpg"
+            }
 
-           el.attr("src", lnk);
+            el.attr("src", lnk);
 
-           el.attr("original-src",lnk)
-       }
+            el.attr("original-src", lnk)
+        }
 
-   }
+    }
 });
