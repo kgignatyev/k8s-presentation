@@ -28,7 +28,7 @@
             <br><br>
             Files:
             <ul>
-                <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
+                <li ng-repeat="f in files" style="font:smaller; margin-bottom: 10px;">{{f.name}} {{f.$errorParam}}
                     <img src="/img/ajax-loader.gif"  width="200px" ng-show="f.inProgress"/>
                     <span class="progress" ng-show="f.progress >= 0">
         <div style="width:{{f.progress}}%"
@@ -45,7 +45,10 @@
             <div class="col-md-12">
                 <li ng-repeat="a in tl.assets">
                     {{a}}
-                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="sm" pending="yes" />
+                    Thumbnail:
+                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="sm"  width="100"/>
+                    Medium size:
+                    <img  class="tl-image"  travelog="tl" travelog-image="a" img-size="md"  width="100" />
                 </li>
             </div>
     </div>

@@ -103,15 +103,15 @@ m.controller('TravelogEditorCtrl', function ($scope, $http, $routeParams, $locat
             if (src) {
                 if (!imgEl.attr('loaded')) {
                     //todo: replace with head request against desired endpoint
-                    $http.post("/api/assets/check-present", {url: src})
+                    $http.head(src)
                         .then(function (r) {
-                            console.info("got:" + JSON.stringify(r));
+                            // console.info("got:" + JSON.stringify(r));
 
                             imgEl.attr('src', src);
                             imgEl.attr('loaded', 'true');
 
                         }).catch(function (data, status, headers, config) {
-                        imgEl.attr('src', '/img/ajax-loader-circle.gif');
+                        imgEl.attr('src', '/img/ajax-loader-squares.gif');
                     })
                 }
             }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 @Service
@@ -60,7 +61,7 @@ public class TranscodingService implements InitializingBean{
         File outFile = File.createTempFile(tempFilesPrefix, new File(outKey).getName(), tempDir);
 
         String[] cmd = new String[]{ "convert", inFile.getAbsolutePath(), "-resize", ""+ maxWidth + "x10000>", outFile.getAbsolutePath()};
-        logger.info( "executing {}", cmd.toString());
+        logger.info( "executing {}", Arrays.toString(cmd));
         Process process = Runtime.getRuntime().exec(cmd);
         Scanner errScanner = new Scanner(process.getErrorStream()).useDelimiter("\n");
         int res = process.waitFor();
